@@ -133,7 +133,7 @@ namespace SongPlayer
 
                 Console.WriteLine("SONG SEARCHER");
                 Console.WriteLine("-------------");
-                Console.Write("By letter or author or lenght?: (l, a, le) ");
+                Console.Write("By letter or author or lenght or alphabetical order?: (l, a, le, al) ");
                 string answ = Console.ReadLine();
                 if (answ == "l")
                 {
@@ -166,7 +166,6 @@ namespace SongPlayer
                             Console.WriteLine(i + ": " + songList[i].name);
 
                         }
-
                     }
                     Console.Write("Select a song: ");
                     int num = Convert.ToInt32(Console.ReadLine());
@@ -217,6 +216,11 @@ namespace SongPlayer
                             break;
 
                     }
+                }
+                else if(answ == "al")
+                {
+                    Array.Sort(songList);
+                    MainMethod();
                 }
             }
             void ConsecutiveSongPlayer()

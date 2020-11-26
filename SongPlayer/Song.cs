@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace SongPlayer
 {
-    class Song
+    class Song : IComparable
     {
         public string name;
         public string author;
@@ -31,6 +31,12 @@ namespace SongPlayer
         {
             Process.Start(i.link);
         }
-    }
+        public int CompareTo(object obj)
+        {
+            Song otherSong = (Song)obj;
 
+            return this.name.CompareTo(otherSong.name);
+        }
+
+    }
 }
