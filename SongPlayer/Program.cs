@@ -13,7 +13,6 @@ namespace SongPlayer
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\Canzoni.txt";
 
-
             //  Array  
 
             Song[] songList = new Song[1];
