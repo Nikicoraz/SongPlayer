@@ -18,17 +18,20 @@ namespace SongPlayer
             Song[] songList = new Song[1];
 
             //Codice
+            //SongsList = Lista temporanea da cancellare e riscrivere ogni volta che si legge o scrive il file
 
             List<string> SongsList = new List<string>();
             ReadSongs(SongsList, ref songList);
             MainMethod();
 
+            //Methodi magici per far funzionare il programma
 
-
-            //Methods to make the magic happen
-
+            //Avrei semplicemente potuto tenere main ma sono stupido
             void MainMethod()
             {
+                //conf = variabile che decide cosa fare (input, string)
+                //Per le definizioni dei metodi guarda sotto
+
                 Console.Write("Play a song or details or search or consecutive play or shuffle or add or remove?: (p, d, s, c, sh, a, rm) ");
                 string conf = Console.ReadLine();
                 try
@@ -36,7 +39,6 @@ namespace SongPlayer
                     if (conf == "p")
                     {
                         SongPlayer();
-
                     }
                     else if (conf == "d")
                     {
@@ -54,6 +56,9 @@ namespace SongPlayer
                     {
                         SongShuffeler();
                     }
+                    //Questi ultimi due i metodi erano piu' complicati e servivano delle variabili in input
+                    //quindi ho dovuto scrivere fuori dal metodo
+
                     else if (conf == "a")
                     {
                         Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -92,6 +97,8 @@ namespace SongPlayer
                         Console.ReadLine();
                     }
                 }
+                //Scrittura di eventuali errori
+
                 catch (FormatException)
                 {
                     Console.WriteLine("Enter a number!");
@@ -103,6 +110,7 @@ namespace SongPlayer
                     Console.ReadLine();
                 }
             }
+            //Metodo per far partire le canzoni
             void SongPlayer()
             {
                 for (int i = 0; i < songList.Length; i++)
@@ -114,6 +122,7 @@ namespace SongPlayer
                 int num = Convert.ToInt32(Console.ReadLine());
                 Song.Play(songList[num]);
             }
+            //Metodo per vedere le variabili della canzoni es. nome
             void SongDeatailer()
             {
                 for (int i = 0; i < songList.Length; i++)
@@ -128,9 +137,9 @@ namespace SongPlayer
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
                 MainMethod();
             }
+            //Metodo per organizzare e cercare le canzoni
             void SongSearcher()
             {
-
                 Console.WriteLine("SONG SEARCHER");
                 Console.WriteLine("-------------");
                 Console.Write("By letter or author or lenght or alphabetical order?: (l, a, le, al) ");
@@ -223,6 +232,7 @@ namespace SongPlayer
                     MainMethod();
                 }
             }
+            //Metodo per far suonare le canzoni in ordini
             void ConsecutiveSongPlayer()
             {
                 for (int i = 0; i < songList.Length; i++)
@@ -250,8 +260,10 @@ namespace SongPlayer
                     }
                 }
             }
+            //Metodo per far suonare canzoni a caso
             void SongShuffeler()
             {
+                //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
                 System.Random random = new System.Random();
                 for (int i = 1; i > 0; i++)
                 {
@@ -262,6 +274,7 @@ namespace SongPlayer
 
                 }
             }
+            //Metodo per aggiungere canzoni al file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             void AddSong(List<string> songs, string name, string author, int length, string link)
             {
                 for (int i = 0; i < songs.Count; i++)
@@ -274,12 +287,17 @@ namespace SongPlayer
                 File.WriteAllText(@path, allSongsList);
 
             }
+            //Metodo per leggere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
+            //e quindi aggiornarle
             void ReadSongs(List<string> songsList, ref Song[] songArray)
             {
+                //Controllo se esiste il file altrimenti lo crea
                 if (File.Exists(@path))
                 {
+                    //Riscrive la lista e usa come divisore -ENDSONG-\n; \n usato per rendere di piu' facile lettura il file
                     songsList.Clear();
                     string[] readSongs = File.ReadAllText(@path).Split(new[] { "-ENDSONG-\n" }, StringSplitOptions.None);
+                    //Per qualche motivo nell'array c'e' sempre uno spazio vuoto da rimuovere, forse centra col metodo di separazione
                     Array.Resize(ref readSongs, readSongs.Length - 1);
                     foreach (string s in readSongs)
                     {
@@ -302,8 +320,10 @@ namespace SongPlayer
                 }
 
             }
+            //Metodo per rimuovere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             void RemoveSong(List<string> songs, ref Song[] songArray, int songToRemove)
             {
+                //Rimuove la canzone dalla lista temporanea e riscrive il file con le canzoni di prima
                 songs.RemoveAt(songToRemove);
                 for (int i = 0; i < songs.Count; i++)
                 {

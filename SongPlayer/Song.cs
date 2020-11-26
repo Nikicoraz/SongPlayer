@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace SongPlayer
 {
+    //Classe canzoni da usare nel programma
     class Song : IComparable
     {
         public string name;
@@ -18,7 +19,7 @@ namespace SongPlayer
             time = t;
             link = l;
         }
-
+        //Metodo per elencare le variabili della canzone
         public static void Listen(Song i)
         {
             Console.WriteLine("Name: " + i.name);
@@ -27,14 +28,15 @@ namespace SongPlayer
             Console.Write("Lenght (m): "); UsefulTools.ToMinute(Convert.ToDouble(i.time));
             Console.WriteLine("Link: " + i.link);
         }
+        //Metodo per aprire una finestra nel browser con il link dato
         public static void Play(Song i)
         {
             Process.Start(i.link);
         }
+        //Metodo per organizzare un array di canzoni alfabeticamente
         public int CompareTo(object obj)
         {
             Song otherSong = (Song)obj;
-
             return this.name.CompareTo(otherSong.name);
         }
 

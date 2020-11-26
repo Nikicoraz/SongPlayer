@@ -21,6 +21,11 @@ namespace Panda_2
                 m++;
             }
             double t = m + s / 100;
+            if(t.ToString().Length == 3)
+            {
+                Console.WriteLine(Convert.ToString(t) + "0" + "m");
+                return;
+            }
             Console.WriteLine(Convert.ToString(t) + "m");
             
         }
