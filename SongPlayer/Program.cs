@@ -10,7 +10,6 @@ namespace SongPlayer
         static void Main(string[] args)
         {
             //Dove salvare le canzoni
-            //Test
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\Canzoni.txt";
 
