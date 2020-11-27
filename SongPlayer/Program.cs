@@ -11,12 +11,14 @@ namespace SongPlayer
         {
             //Dove salvare le canzoni
 
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\Canzoni.txt";
 
-            //  Array  
+            //songList = Array canzoni che vengono poi visualizzate, impostato ad una lunghezza iniziale di 1 che 
+            //dopo viene cambiata nella funzione ReadSongs() (output, Song)
 
             Song[] songList = new Song[1];
-
+            
             //Codice
             //SongsList = Lista temporanea da cancellare e riscrivere ogni volta che si legge o scrive il file
 
@@ -110,18 +112,20 @@ namespace SongPlayer
                     Console.ReadLine();
                 }
             }
+
             //Metodo per far partire le canzoni
             void SongPlayer()
             {
                 for (int i = 0; i < songList.Length; i++)
                 {
-                    Console.WriteLine(i + ": " + songList[i].name);
+                    Console.WriteLine("|" + i + "| " + songList[i].name);
                 }
 
                 Console.Write("Select a song: ");
-                int num = Convert.ToInt32(Console.ReadLine());
+                int num = int.Parse(Console.ReadLine());
                 Song.Play(songList[num]);
             }
+
             //Metodo per vedere le variabili della canzoni es. nome
             void SongDeatailer()
             {
@@ -131,12 +135,13 @@ namespace SongPlayer
                 }
 
                 Console.Write("Select a song: ");
-                int num = Convert.ToInt32(Console.ReadLine());
+                int num = int.Parse(Console.ReadLine());
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
                 Song.Listen(songList[num]);
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
                 MainMethod();
             }
+
             //Metodo per organizzare e cercare le canzoni
             void SongSearcher()
             {
@@ -154,12 +159,10 @@ namespace SongPlayer
                         if (songList[i].name.ToUpperInvariant().StartsWith(letter))
                         {
                             Console.WriteLine(i + ": " + songList[i].name);
-
                         }
-
                     }
                     Console.Write("Select a song: ");
-                    int num = Convert.ToInt32(Console.ReadLine());
+                    int num = int.Parse(Console.ReadLine());
                     Song.Play(songList[num]);
                 }
                 else if (answ == "a")
@@ -173,11 +176,10 @@ namespace SongPlayer
                         if (songList[i].author.ToUpperInvariant() == author)
                         {
                             Console.WriteLine(i + ": " + songList[i].name);
-
                         }
                     }
                     Console.Write("Select a song: ");
-                    int num = Convert.ToInt32(Console.ReadLine());
+                    int num = int.Parse(Console.ReadLine());
                     Song.Play(songList[num]);
                 }
                 else if (answ == "le")
@@ -192,17 +194,13 @@ namespace SongPlayer
                             sec = Convert.ToInt32(Console.ReadLine());
                             for (int i = 0; i < songList.Length; i++)
                             {
-
                                 if (songList[i].time > sec)
                                 {
                                     Console.WriteLine(i + ": " + songList[i].name);
-
                                 }
-
-
                             }
                             Console.Write("Select a song: ");
-                            int num = Convert.ToInt32(Console.ReadLine());
+                            int num = int.Parse(Console.ReadLine());
                             Song.Play(songList[num]);
                             break;
                         case '<':
@@ -210,14 +208,10 @@ namespace SongPlayer
                             sec = Convert.ToInt32(Console.ReadLine());
                             for (int i = 0; i < songList.Length; i++)
                             {
-
                                 if (songList[i].time < sec)
                                 {
                                     Console.WriteLine(i + ": " + songList[i].name);
-
                                 }
-
-
                             }
                             Console.Write("Select a song: ");
                             num = Convert.ToInt32(Console.ReadLine());
@@ -229,9 +223,11 @@ namespace SongPlayer
                 else if(answ == "al")
                 {
                     Array.Sort(songList);
+                    Console.WriteLine("--------------------------------------------------------------------------------------------");
                     MainMethod();
                 }
             }
+
             //Metodo per far suonare le canzoni in ordini
             void ConsecutiveSongPlayer()
             {
@@ -260,6 +256,7 @@ namespace SongPlayer
                     }
                 }
             }
+
             //Metodo per far suonare canzoni a caso
             void SongShuffeler()
             {
@@ -271,9 +268,9 @@ namespace SongPlayer
                     Song.Play(songList[y]);
                     Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
                     Thread.Sleep(songList[y].time * 1000 + 5000);
-
                 }
             }
+
             //Metodo per aggiungere canzoni al file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             void AddSong(List<string> songs, string name, string author, int length, string link)
             {
@@ -287,6 +284,7 @@ namespace SongPlayer
                 File.WriteAllText(@path, allSongsList);
 
             }
+
             //Metodo per leggere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             //e quindi aggiornarle
             void ReadSongs(List<string> songsList, ref Song[] songArray)
@@ -316,10 +314,12 @@ namespace SongPlayer
                 else
                 {
                     Console.WriteLine("Song file does not exist! Creating one...");
+                    System.IO.Directory.CreateDirectory(folderPath);
                     File.WriteAllText(@path, string.Empty);
                 }
 
             }
+
             //Metodo per rimuovere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             void RemoveSong(List<string> songs, ref Song[] songArray, int songToRemove)
             {
@@ -332,6 +332,7 @@ namespace SongPlayer
                 string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
             }
+
         }
     }
 }
