@@ -15,7 +15,7 @@ namespace Panda_2
         public static void ToMinute(double s)
         {
             double m = 0;
-            while(s > 60)
+            while(s >= 60)
             {
                 s -= 60;
                 m++;
@@ -25,6 +25,9 @@ namespace Panda_2
             {
                 Console.WriteLine(Convert.ToString(t) + "0" + "m");
                 return;
+            }else if(t.ToString().Length == 1)
+            {
+                Console.WriteLine(Convert.ToString(t) + ".00" + "m");
             }
             Console.WriteLine(Convert.ToString(t) + "m");
             

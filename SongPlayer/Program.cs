@@ -9,7 +9,7 @@ namespace SongPlayer
     {
         static void Main(string[] args)
         {
-            //Dove salvare le canzoni
+            //Ottenimento posizioni dove salvare le canzoni
 
             string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\Canzoni.txt";
@@ -20,13 +20,13 @@ namespace SongPlayer
             Song[] songList = new Song[1];
             
             //Codice
-            //SongsList = Lista temporanea da cancellare e riscrivere ogni volta che si legge o scrive il file
+            //SongsList = Lista temporanea da cancellare e riscrivere ogni volta che si legge o scrive il file (output, List<string>)
 
             List<string> SongsList = new List<string>();
             ReadSongs(SongsList, ref songList);
             MainMethod();
 
-            //Methodi magici per far funzionare il programma
+            //Metodi magici per far funzionare il programma
 
             //Avrei semplicemente potuto tenere main ma sono stupido
             void MainMethod()
@@ -261,19 +261,35 @@ namespace SongPlayer
             void SongShuffeler()
             {
                 //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
+                //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 5 turni
+                int[] alradyPlayedSongs = {-1, -1, -1, -1, -1 };
                 System.Random random = new System.Random();
                 for (int i = 1; i > 0; i++)
                 {
+                    bool canPlaySong = true;
                     int y = random.Next(0, songList.Length);
-                    Song.Play(songList[y]);
-                    Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
-                    Thread.Sleep(songList[y].time * 1000 + 5000);
+                    foreach(int elment in alradyPlayedSongs)
+                    {
+                        if(elment == y)
+                        {
+                            canPlaySong = false;
+                        }
+                    }
+                    if (canPlaySong)
+                    {
+                        Song.Play(songList[y]);
+                        Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
+                        alradyPlayedSongs[(i - 1) % 5] = y;
+                        Thread.Sleep(songList[y].time * 1000 + 5000);
+                    }
+                    
                 }
             }
 
             //Metodo per aggiungere canzoni al file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             void AddSong(List<string> songs, string name, string author, int length, string link)
             {
+                //Conversione delle canzoni in una stringa da inserire nel file
                 for (int i = 0; i < songs.Count; i++)
                 {
                     songs[i] = songs[i] + "-ENDSONG-\n";
@@ -282,7 +298,6 @@ namespace SongPlayer
                 songs.Add(songDetails);
                 string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
-
             }
 
             //Metodo per leggere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
@@ -295,13 +310,13 @@ namespace SongPlayer
                     //Riscrive la lista e usa come divisore -ENDSONG-\n; \n usato per rendere di piu' facile lettura il file
                     songsList.Clear();
                     string[] readSongs = File.ReadAllText(@path).Split(new[] { "-ENDSONG-\n" }, StringSplitOptions.None);
-                    //Per qualche motivo nell'array c'e' sempre uno spazio vuoto da rimuovere, forse centra col metodo di separazione
+                    //Nell'array c'e' sempre uno spazio vuoto da rimuovere, centra col metodo di separazione
                     Array.Resize(ref readSongs, readSongs.Length - 1);
-                    foreach (string s in readSongs)
+                    foreach (string s in readSongs) //Aggiunge le canzoni dell'array alla lista
                     {
                         songsList.Add(s);
                     }
-                    Song[] readSongsArray = new Song[readSongs.Length];
+                    Song[] readSongsArray = new Song[readSongs.Length]; //Creazione di array da usare per impostare l'array principale
                     for (int i = 0; i < readSongs.Length; i++)
                     {
                         string[] tempArray = new string[4];
@@ -311,7 +326,7 @@ namespace SongPlayer
                     }
                     songArray = readSongsArray;
                 }
-                else
+                else //Creazione del file e della directory
                 {
                     Console.WriteLine("Song file does not exist! Creating one...");
                     System.IO.Directory.CreateDirectory(folderPath);
@@ -332,7 +347,6 @@ namespace SongPlayer
                 string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
             }
-
         }
     }
 }
