@@ -262,17 +262,21 @@ namespace SongPlayer
             {
                 //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
                 //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 5 turni
-                int[] alradyPlayedSongs = {-1, -1, -1, -1, -1 };
+                //Questo viene fatto solo se si ha piu' di 10 canzoni
+                int[] alradyPlayedSongs = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
                 System.Random random = new System.Random();
                 for (int i = 1; i > 0; i++)
                 {
                     bool canPlaySong = true;
                     int y = random.Next(0, songList.Length);
-                    foreach(int elment in alradyPlayedSongs)
+                    if(songList.Length > 10)
                     {
-                        if(elment == y)
+                        foreach (int elment in alradyPlayedSongs)
                         {
-                            canPlaySong = false;
+                            if (elment == y)
+                            {
+                                canPlaySong = false;
+                            }
                         }
                     }
                     if (canPlaySong)

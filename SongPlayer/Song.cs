@@ -5,8 +5,12 @@ using System.Diagnostics;
 namespace SongPlayer
 {
     //Classe canzoni da usare nel programma
+    /// <summary>
+    /// Classe modello per canzoni
+    /// </summary>
     class Song : IComparable
     {
+        
         public string name;
         public string author;
         public int time;
@@ -19,7 +23,11 @@ namespace SongPlayer
             time = t;
             link = l;
         }
+
         //Metodo per elencare le variabili della canzone
+        ///<summary>
+        ///Metodo per elencare le variabili della canzone
+        /// </summary>
         public static void Listen(Song i)
         {
             Console.WriteLine("Name: " + i.name);
@@ -28,7 +36,12 @@ namespace SongPlayer
             Console.Write("Lenght (m): "); UsefulTools.ToMinute(Convert.ToDouble(i.time));
             Console.WriteLine("Link: " + i.link);
         }
+
         //Metodo per aprire una finestra nel browser con il link dato
+        /// <summary>
+        ///Metodo per aprire una finestra nel browser con il link dato
+        /// </summary>
+        /// <param name="i"></param>
         public static void Play(Song i)
         {
             Process.Start(i.link);
