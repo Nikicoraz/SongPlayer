@@ -95,16 +95,17 @@ namespace SongPlayer
                     }
                     else
                     {
-                        Console.WriteLine("Wrong character entered!");
-                        Console.ReadLine();
+                        Console.WriteLine("Wrong character entered!\n--------------------------------------------------------------------------------------------");
+                        MainMethod();
+                        
                     }
                 }
                 //Scrittura di eventuali errori
 
                 catch (FormatException)
                 {
-                    Console.WriteLine("Enter a number!");
-                    Console.ReadLine();
+                    Console.WriteLine("Enter a number!\n--------------------------------------------------------------------------------------------");
+                    MainMethod();
                 }
                 catch (Exception e)
                 {
@@ -269,7 +270,7 @@ namespace SongPlayer
                 {
                     bool canPlaySong = true;
                     int y = random.Next(0, songList.Length);
-                    if(songList.Length > 10)
+                    if (songList.Length > 10)
                     {
                         foreach (int elment in alradyPlayedSongs)
                         {
