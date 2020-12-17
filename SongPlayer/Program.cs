@@ -262,13 +262,12 @@ namespace SongPlayer
             void SongShuffeler()
             {
                 //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
-                //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 5 turni
+                //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 10 turni
                 //Questo viene fatto solo se si ha piu' di 10 canzoni
                 int[] alradyPlayedSongs = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
                 System.Random random = new System.Random();
                 for (int i = 1; i > 0; i++)
                 {
-                    bool canPlaySong = true;
                     int y = random.Next(0, songList.Length);
                     if (songList.Length > 10)
                     {
@@ -276,18 +275,15 @@ namespace SongPlayer
                         {
                             if (elment == y)
                             {
-                                canPlaySong = false;
+                                Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i - elment} songs ago!");
+                                continue;
                             }
                         }
                     }
-                    if (canPlaySong)
-                    {
                         Song.Play(songList[y]);
                         Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
-                        alradyPlayedSongs[(i - 1) % 5] = y;
+                        alradyPlayedSongs[(i - 1) % 10] = y;
                         Thread.Sleep(songList[y].time * 1000 + 5000);
-                    }
-                    
                 }
             }
 
