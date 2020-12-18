@@ -274,6 +274,7 @@ namespace SongPlayer
                     for (int i = 1; i > 0; i++)
                     {
                         int y = random.Next(0, songList.Length);
+                        bool alreadyPlayed = false;
                         if (songList.Length > 10)
                         {
                             foreach (int elment in alradyPlayedSongs)
@@ -281,10 +282,12 @@ namespace SongPlayer
                                 if (elment == y)
                                 {
                                     Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i - elment} songs ago!");
-                                    continue;
+                                    alreadyPlayed = true;
+                                    break;
                                 }
                             }
                         }
+                        if (alreadyPlayed) continue;
                         Song.Play(songList[y]);
                         Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
                         alradyPlayedSongs[(i - 1) % 10] = y;
@@ -324,17 +327,20 @@ namespace SongPlayer
                             {
                                 System.Random random = new System.Random();
                                 int y = random.Next(0, songs.Count - 1);
+                                bool alreadyPlayed = false;
                                 if (songs.Count > 10)
                                 {
                                     foreach (int elment in alradyPlayedSongs)
                                     {
                                         if (elment == y)
                                         {
-                                            Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {count - elment} songs ago!");
-                                            continue;
+                                            Console.WriteLine($"Skipping song {songs[y]} because it has already been played {count - elment} songs ago!");
+                                            alreadyPlayed = true;
+                                            break;
                                         }
                                     }
                                 }
+                                if (alreadyPlayed) continue;
                                 wmp.URL = songs[y];
                                 wmp.controls.play();
                                 Console.WriteLine("[" + count + "] " + "Now Playing: " + songs[y].Replace(folderPath, "").Replace("\\", "").Replace(".mp3", ""));

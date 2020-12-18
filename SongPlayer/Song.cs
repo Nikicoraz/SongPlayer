@@ -9,7 +9,7 @@ namespace SongPlayer
     /// </summary>
     class Song : IComparable
     {
-
+        
         public string name;
         public string author;
         public int time;
