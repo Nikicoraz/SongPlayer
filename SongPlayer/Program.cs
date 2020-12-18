@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using WMPLib;
 
 namespace SongPlayer
 {
@@ -13,12 +14,11 @@ namespace SongPlayer
 
             string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\Canzoni.txt";
-
             //songList = Array canzoni che vengono poi visualizzate, impostato ad una lunghezza iniziale di 1 che 
             //dopo viene cambiata nella funzione ReadSongs() (output, Song)
 
             Song[] songList = new Song[1];
-            
+
             //Codice
             //SongsList = Lista temporanea da cancellare e riscrivere ogni volta che si legge o scrive il file (output, List<string>)
 
@@ -97,7 +97,7 @@ namespace SongPlayer
                     {
                         Console.WriteLine("Wrong character entered!\n--------------------------------------------------------------------------------------------");
                         MainMethod();
-                        
+
                     }
                 }
                 //Scrittura di eventuali errori
@@ -221,7 +221,7 @@ namespace SongPlayer
 
                     }
                 }
-                else if(answ == "al")
+                else if (answ == "al")
                 {
                     Array.Sort(songList);
                     Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -261,29 +261,114 @@ namespace SongPlayer
             //Metodo per far suonare canzoni a caso
             void SongShuffeler()
             {
-                //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
-                //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 10 turni
-                //Questo viene fatto solo se si ha piu' di 10 canzoni
-                int[] alradyPlayedSongs = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-                System.Random random = new System.Random();
-                for (int i = 1; i > 0; i++)
+                //Scelta se usare le canzoni salvate sul pc in formato mp3 o usare i link nel file delle canzoni
+                Console.Write("Internet song or fisical song? (i, f) ");
+                string _ = Console.ReadLine();
+                if (_ == "i")
                 {
-                    int y = random.Next(0, songList.Length);
-                    if (songList.Length > 10)
+                    //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
+                    //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 10 turni
+                    //Questo viene fatto solo se si ha piu' di 10 canzoni
+                    int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+                    System.Random random = new System.Random();
+                    for (int i = 1; i > 0; i++)
                     {
-                        foreach (int elment in alradyPlayedSongs)
+                        int y = random.Next(0, songList.Length);
+                        if (songList.Length > 10)
                         {
-                            if (elment == y)
+                            foreach (int elment in alradyPlayedSongs)
                             {
-                                Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i - elment} songs ago!");
-                                continue;
+                                if (elment == y)
+                                {
+                                    Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i - elment} songs ago!");
+                                    continue;
+                                }
                             }
                         }
-                    }
                         Song.Play(songList[y]);
                         Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
                         alradyPlayedSongs[(i - 1) % 10] = y;
                         Thread.Sleep(songList[y].time * 1000 + 5000);
+                    }
+                }
+                else if (_ == "f")
+                {
+                    //Istanza di un media player
+                    WindowsMediaPlayer wmp = new WindowsMediaPlayer();
+                    //Dizionario canzoni
+                    Dictionary<int, string> songs = new Dictionary<int, string>();
+                    string[] files = Directory.GetFiles(folderPath);
+                    int count = 0;
+                    //Aggiunta canzoni a dizionario
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        if (files[i].Contains(".mp3"))
+                        {
+                            songs.Add(count, files[i]);
+                            count += 1;
+                        }
+                    }
+                    if(count == 0)
+                    {
+                        Console.WriteLine("No mp3 files found in %appdata%/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni!!!!!!!");
+                        MainMethod();
+                    }
+                    int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+                    count = 1;
+                    //Thread scelta random canzoni e play
+                    Thread t = new Thread(new ThreadStart(() =>
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                System.Random random = new System.Random();
+                                int y = random.Next(0, songs.Count - 1);
+                                if (songs.Count > 10)
+                                {
+                                    foreach (int elment in alradyPlayedSongs)
+                                    {
+                                        if (elment == y)
+                                        {
+                                            Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {count - elment} songs ago!");
+                                            continue;
+                                        }
+                                    }
+                                }
+                                wmp.URL = songs[y];
+                                wmp.controls.play();
+                                Console.WriteLine("[" + count + "] " + "Now Playing: " + songs[y].Replace(folderPath, "").Replace("\\", "").Replace(".mp3", ""));
+                                alradyPlayedSongs[(count - 1) % 10] = y;
+                                count += 1;
+                                Thread.Sleep(1000);
+                                Thread.Sleep(Convert.ToInt32(Math.Round(wmp.currentMedia.duration - 1)) * 1000);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"{e.Message}\nStopped Thread\n-----------------------------------------------------------------");
+                            }
+                        }
+                    }));
+                    t.Start();
+                    while (true)
+                    {
+                        try
+                        {
+                            Console.WriteLine("Enter skip to skip song");
+                            _ = Console.ReadLine();
+                            //Interrompe il wait del thread e ferma la canzone attuale cosi' il thread ricomincia
+                            //e sceglie una nuova canzone
+                            if (_.ToLower() == "skip")
+                            {
+                                wmp.controls.stop();
+                                t.Interrupt();
+                            }
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Hmmmm");
+                        }
+                    }
                 }
             }
 

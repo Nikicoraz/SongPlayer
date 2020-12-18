@@ -1,5 +1,4 @@
-﻿using Panda_2;
-using System;
+﻿using System;
 using System.Diagnostics;
 
 namespace SongPlayer
@@ -10,7 +9,7 @@ namespace SongPlayer
     /// </summary>
     class Song : IComparable
     {
-        
+
         public string name;
         public string author;
         public int time;
@@ -33,7 +32,7 @@ namespace SongPlayer
             Console.WriteLine("Name: " + i.name);
             Console.WriteLine("Author: " + i.author);
             Console.WriteLine("Lenght (s): " + Convert.ToString(i.time) + "s");
-            Console.Write("Lenght (m): "); UsefulTools.ToMinute(Convert.ToDouble(i.time));
+            Console.Write("Lenght (m): " + UsefulTools.UsefulTools.ToMinute(Convert.ToDouble(i.time)) + "\n");
             Console.WriteLine("Link: " + i.link);
         }
 

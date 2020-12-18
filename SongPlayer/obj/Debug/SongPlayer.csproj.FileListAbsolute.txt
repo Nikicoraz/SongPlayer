@@ -5,3 +5,5 @@ C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.csproj.Co
 C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.exe
 C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.pdb
 C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.csprojAssemblyReference.cache
+C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\Interop.WMPLib.dll
+C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.csproj.ResolveComReference.cache
