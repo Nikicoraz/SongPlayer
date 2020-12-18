@@ -356,11 +356,11 @@ namespace SongPlayer
                         }
                     }));
                     t.Start();
+                    Console.WriteLine("Enter skip to skip song or v to change the volume");
                     while (true)
                     {
                         try
                         {
-                            Console.WriteLine("Enter skip to skip song");
                             _ = Console.ReadLine();
                             //Interrompe il wait del thread e ferma la canzone attuale cosi' il thread ricomincia
                             //e sceglie una nuova canzone
@@ -368,6 +368,11 @@ namespace SongPlayer
                             {
                                 wmp.controls.stop();
                                 t.Interrupt();
+                            }
+                            else if(_.ToLower() == "v")
+                            {
+                                Console.Write("Enter a volume: ");
+                                wmp.settings.volume = Convert.ToInt32(Console.ReadLine()); 
                             }
                         }
                         catch
