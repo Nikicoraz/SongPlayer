@@ -318,6 +318,7 @@ namespace SongPlayer
                     }
                     int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
                     count = 1;
+                    bool skip = false;
                     //Thread scelta random canzoni e play
                     Thread t = new Thread(new ThreadStart(() =>
                     {
@@ -325,6 +326,7 @@ namespace SongPlayer
                         {
                             try
                             {
+                                skip = false;
                                 System.Random random = new System.Random();
                                 int y = random.Next(0, songs.Count - 1);
                                 bool alreadyPlayed = false;
@@ -347,7 +349,29 @@ namespace SongPlayer
                                 alradyPlayedSongs[(count - 1) % 10] = y;
                                 count += 1;
                                 Thread.Sleep(1000);
-                                Thread.Sleep(Convert.ToInt32(Math.Round(wmp.currentMedia.duration - 1)) * 1000);
+                                /*Dovrebbe essere una barra dei progressi ma fa abbastanza casino cosi' l'ho tolta
+                                 * 
+                                 * new Thread(new ThreadStart(() =>
+                                {
+                                    for(int i = 0; i < 100;)
+                                    {
+                                        UsefulTools.UsefulTools.Progressbar(i, true);
+                                        Console.Write($"{wmp.controls.currentPositionString} / {wmp.currentMedia.durationString}");
+                                        i = Convert.ToInt32(Math.Round((wmp.controls.currentPosition / wmp.currentMedia.duration) * 100));
+                                        Thread.Sleep(1000);
+                                    }
+
+                                })).Start();
+                                */
+                                int __ = Convert.ToInt32(wmp.controls.currentPosition / wmp.currentMedia.duration);
+                                while (__ != 100 || __ > 100)
+                                {
+                                    __ = Convert.ToInt32((wmp.controls.currentPosition / wmp.currentMedia.duration * 100));
+                                    if (skip)
+                                    {
+                                        break;
+                                    }
+                                }
                             }
                             catch (Exception e)
                             {
@@ -356,23 +380,37 @@ namespace SongPlayer
                         }
                     }));
                     t.Start();
-                    Console.WriteLine("Enter skip to skip song or v to change the volume");
+                    Console.WriteLine("Enter skip to skip song or v to change the volume or pause or resume");
                     while (true)
                     {
                         try
                         {
                             _ = Console.ReadLine();
-                            //Interrompe il wait del thread e ferma la canzone attuale cosi' il thread ricomincia
-                            //e sceglie una nuova canzone
+                            //Mette il bool skip a true che fa break sul loop che controlla la lunghezza della canzone
                             if (_.ToLower() == "skip")
                             {
+                                Console.WriteLine("Song skipped!");
                                 wmp.controls.stop();
-                                t.Interrupt();
+                                skip = true;
                             }
+                            //Cambia il volume
                             else if(_.ToLower() == "v")
                             {
                                 Console.Write("Enter a volume: ");
-                                wmp.settings.volume = Convert.ToInt32(Console.ReadLine()); 
+                                wmp.settings.volume = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine($"Volume set to {wmp.settings.volume}%");
+                            }
+                            //Mette in pausa
+                            else if(_.ToLower() == "pause")
+                            {
+                                wmp.controls.pause();
+                                Console.WriteLine("Paused!");
+                            }
+                            //Riprende
+                            else if(_.ToLower() == "resume")
+                            {
+                                wmp.controls.play();
+                                Console.WriteLine("Resumed!");
                             }
                         }
                         catch

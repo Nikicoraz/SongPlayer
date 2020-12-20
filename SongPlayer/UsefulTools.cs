@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -216,7 +217,7 @@ namespace UsefulTools
             {
                 for (int y = 0; y < words.Length; y++)
                 {
-                    if(i != y)
+                    if (i != y)
                     {
                         if (words[i] == words[y])
                         {
@@ -224,7 +225,7 @@ namespace UsefulTools
                             return true;
                         }
                     }
-                   
+
                 }
             }
             return false;
@@ -288,7 +289,7 @@ namespace UsefulTools
         public static double Media(double[] num)
         {
             double numeroAttuale = 0;
-            foreach(double numero in num)
+            foreach (double numero in num)
             {
                 numeroAttuale += numero;
             }
@@ -329,7 +330,24 @@ namespace UsefulTools
             }
             return -1;
         }
-        
+        public static void Progressbar(int percent, bool update = false)
+        {
+            const char BLOCK = '■';
+            string BACK = string.Concat(Enumerable.Repeat('\b', 120));
+            if (update)
+            {
+                Console.Write(BACK);
+            }
+            Console.Write('[');
+            var p = (int)((percent / 1f) + .5f);
+            for (int i = 0; i < 100; i++)
+            {
+                if (i >= p) Console.Write(' ');
+                else Console.Write(BLOCK);
+            }
+            Console.Write("] {0, 3:###0}%", percent);
+        }
+
         //Classi
         /// <summary>
         /// Variabile per immagazzinare 2 valori
@@ -367,7 +385,7 @@ namespace UsefulTools
                 float y = v1.y / v2.y;
                 return new Vector2(x, y);
             }
-            
+
         }
         /// <summary>
         /// Variabile per immagazzinare 3 valori
@@ -379,7 +397,7 @@ namespace UsefulTools
             {
                 this.z = z;
             }
-            public Vector3(float x, float y) : base(x, y){ z = 0; }
+            public Vector3(float x, float y) : base(x, y) { z = 0; }
             public static Vector3 operator +(Vector3 v1, Vector3 v2)
             {
                 float x = v1.x + v2.x;
@@ -406,7 +424,7 @@ namespace UsefulTools
                 float x = v1.x / v2.x;
                 float y = v1.y / v2.y;
                 float z;
-                if(v1.z != 0 && v2.z != 0)
+                if (v1.z != 0 && v2.z != 0)
                 {
                     z = v1.z / v2.z;
                 }
