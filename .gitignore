@@ -1,4 +1,8 @@
 *.exe
 *.pbd
+<<<<<<< HEAD
+=======
+SongPlayer/Properties/
+>>>>>>> bd4f40e55339447e8ca0bec5f300d2be20d2192a
 SongPlayer/obj/
 SongPlayer/bin/
