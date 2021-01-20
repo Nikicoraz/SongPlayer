@@ -1,2 +1,4 @@
 *.exe
 *.pbd
+SongPlayer/obj/
+SongPlayer/bin/
