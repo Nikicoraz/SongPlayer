@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using WMPLib;
 
@@ -277,11 +278,13 @@ namespace SongPlayer
                         bool alreadyPlayed = false;
                         if (songList.Length > 10)
                         {
+                            int el = 0;
                             foreach (int elment in alradyPlayedSongs)
                             {
+                                el += 1;
                                 if (elment == y)
                                 {
-                                    Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i - elment} songs ago!");
+                                    Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i % 10 - el} songs ago!");
                                     alreadyPlayed = true;
                                     break;
                                 }
@@ -334,9 +337,11 @@ namespace SongPlayer
                                 {
                                     foreach (int elment in alradyPlayedSongs)
                                     {
-                                        if (elment == y)
+                                        int el = 0;
+                                        if (elment == y && !alreadyPlayed)
                                         {
-                                            Console.WriteLine($"Skipping song {songs[y]} because it has already been played {count - elment} songs ago!");
+                                            el += 1;
+                                            Console.WriteLine($"Skipping song {songs[y]} because it has already been played {count % 10 - el} songs ago!");
                                             alreadyPlayed = true;
                                             break;
                                         }
@@ -401,13 +406,13 @@ namespace SongPlayer
                                 Console.WriteLine($"Volume set to {wmp.settings.volume}%");
                             }
                             //Mette in pausa
-                            else if(_.ToLower() == "pause")
+                            else if(_.ToLower() == "pause" || _.ToLower() == "p")
                             {
                                 wmp.controls.pause();
                                 Console.WriteLine("Paused!");
                             }
                             //Riprende
-                            else if(_.ToLower() == "resume")
+                            else if(_.ToLower() == "resume" || _.ToLower() == "r")
                             {
                                 wmp.controls.play();
                                 Console.WriteLine("Resumed!");
@@ -418,6 +423,12 @@ namespace SongPlayer
                             Console.WriteLine("Hmmmm");
                         }
                     }
+                }
+                else
+                {
+                    Console.WriteLine($"Wrong character entered! {_} is not an option!");
+                    Console.WriteLine(string.Concat(Enumerable.Repeat('-', 30)));
+                    MainMethod();
                 }
             }
 
