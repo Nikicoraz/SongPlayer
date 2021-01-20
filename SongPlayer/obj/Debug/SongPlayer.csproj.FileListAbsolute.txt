@@ -1,9 +1,0 @@
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\bin\Debug\SongPlayer.exe.config
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\bin\Debug\SongPlayer.exe
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\bin\Debug\SongPlayer.pdb
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.csproj.CoreCompileInputs.cache
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.exe
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.pdb
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.csprojAssemblyReference.cache
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\Interop.WMPLib.dll
-C:\Users\nicol\source\repos\SongPlayer\SongPlayer\obj\Debug\SongPlayer.csproj.ResolveComReference.cache

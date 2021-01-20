@@ -1,3 +1,5 @@
 *.exe
 *.pbd
 SongPlayer/Properties/
+SongPlayer/obj/
+SongPlayer/bin/
