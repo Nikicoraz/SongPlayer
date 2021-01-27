@@ -284,7 +284,7 @@ namespace SongPlayer
                                 el += 1;
                                 if (elment == y)
                                 {
-                                    Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {i % 10 - el} songs ago!");
+                                    Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {(i - el) % 10} songs ago!");
                                     alreadyPlayed = true;
                                     break;
                                 }
@@ -335,13 +335,13 @@ namespace SongPlayer
                                 bool alreadyPlayed = false;
                                 if (songs.Count > 10)
                                 {
+                                    int el = 0;
                                     foreach (int elment in alradyPlayedSongs)
                                     {
-                                        int el = 0;
+                                        el += 1;
                                         if (elment == y && !alreadyPlayed)
                                         {
-                                            el += 1;
-                                            Console.WriteLine($"Skipping song {songs[y]} because it has already been played {count % 10 - el} songs ago!");
+                                            Console.WriteLine($"Skipping song {songs[y]} because it has already been played { (count - el ) % 10} songs ago!");
                                             alreadyPlayed = true;
                                             break;
                                         }
