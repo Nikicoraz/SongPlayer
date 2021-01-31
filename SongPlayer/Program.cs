@@ -290,7 +290,12 @@ namespace SongPlayer
                                 }
                             }
                         }
-                        if (alreadyPlayed) continue;
+                        if (alreadyPlayed){
+							i--;
+							continue;
+						}
+						
+							
                         Song.Play(songList[y]);
                         Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
                         alradyPlayedSongs[(i - 1) % 10] = y;
@@ -347,7 +352,10 @@ namespace SongPlayer
                                         }
                                     }
                                 }
-                                if (alreadyPlayed) continue;
+                                if (alreadyPlayed){
+									count--;
+									continue;
+								}
                                 wmp.URL = songs[y];
                                 wmp.controls.play();
                                 Console.WriteLine("[" + count + "] " + "Now Playing: " + songs[y].Replace(folderPath, "").Replace("\\", "").Replace(".mp3", ""));
