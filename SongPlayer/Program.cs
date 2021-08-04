@@ -7,6 +7,20 @@ using WMPLib;
 
 namespace SongPlayer
 {
+    /*
+        Nicola del futuro qui a dire che adesso so molte piu' robe ma non ho voglia di riscrivere tutto il codice per fare delle cose
+        in modo leggermente migliore come ho fatto nell'ultima funzione edit quindi vabbe'
+    */
+
+    //Enum per rendere piu' facile la modifica di certi parametri delle canzoni
+    public enum SongParameter
+    {
+        Name,
+        Author,
+        Length,
+        Link
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -35,7 +49,7 @@ namespace SongPlayer
                 //conf = variabile che decide cosa fare (input, string)
                 //Per le definizioni dei metodi guarda sotto
 
-                Console.Write("Play a song or details or search or consecutive play or shuffle or add or remove?: (p, d, s, c, sh, a, rm) ");
+                Console.Write("Play a song or details or search or consecutive play or shuffle or add or remove or edit?: (p, d, s, c, sh, a, rm, e) ");
                 string conf = Console.ReadLine();
                 try
                 {
@@ -58,6 +72,10 @@ namespace SongPlayer
                     else if (conf == "sh")
                     {
                         SongShuffeler();
+                    }
+                    else if (conf == "e")
+                    {
+                        SongEditor();
                     }
                     //Questi ultimi due i metodi erano piu' complicati e servivano delle variabili in input
                     //quindi ho dovuto scrivere fuori dal metodo
@@ -88,7 +106,7 @@ namespace SongPlayer
                         }
                         Console.Write("Select a song to remove: ");
                         int songToRemove = int.Parse(Console.ReadLine());
-                        RemoveSong(SongsList, ref songList, songToRemove);
+                        RemoveSong(SongsList, songToRemove);
                         ReadSongs(SongsList, ref songList);
                         Console.WriteLine("Removed song [" + songToRemove + "]");
                         Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -308,7 +326,7 @@ namespace SongPlayer
                     WindowsMediaPlayer wmp = new WindowsMediaPlayer();
                     //Dizionario canzoni
                     Dictionary<int, string> songs = new Dictionary<int, string>();
-                    string[] files = Directory.GetFiles(folderPath);
+                    string[] files = Directory.GetFiles(folderPath+"\\Fisiche");
                     int count = 0;
                     //Aggiunta canzoni a dizionario
                     for (int i = 0; i < files.Length; i++)
@@ -321,7 +339,7 @@ namespace SongPlayer
                     }
                     if(count == 0)
                     {
-                        Console.WriteLine("No mp3 files found in %appdata%/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni!!!!!!!");
+                        Console.WriteLine("No mp3 files found in %appdata%/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Fisiche!!!!!!!");
                         MainMethod();
                     }
                     int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -358,7 +376,7 @@ namespace SongPlayer
 								}
                                 wmp.URL = songs[y];
                                 wmp.controls.play();
-                                Console.WriteLine("[" + count + "] " + "Now Playing: " + songs[y].Replace(folderPath, "").Replace("\\", "").Replace(".mp3", ""));
+                                Console.WriteLine("[" + count + "] " + "Now Playing: " + songs[y].Replace(folderPath + "\\Fisiche", "").Replace("\\", "").Replace(".mp3", ""));
                                 alradyPlayedSongs[(count - 1) % 10] = y;
                                 count += 1;
                                 Thread.Sleep(1000);
@@ -440,6 +458,75 @@ namespace SongPlayer
                 }
             }
 
+            //Metodo per cambiare certe caratteristiche di canzoni 
+            void SongEditor()
+            {
+                //Elenco di tutte le canzoni disponibili
+                for (int i = 0; i < songList.Length; i++)
+                {
+                    Console.WriteLine("|" + i + "| " + songList[i].name);
+                }
+                //Ottenimento canzone da modificare
+                Console.Write("What song would you like to edit? ");
+                int song = Convert.ToInt32(Console.ReadLine());
+                //Ottenimento parametro da modificare
+                Console.Write("What parameter would you like to edit? (n, a, t, l) ");
+                SongParameter sp;
+                while (true)
+                {
+                    try
+                    {   // Avrei dovuto mettere uno switch -_- vabbe'
+                        char param = Convert.ToChar(Console.ReadLine());
+                        if (param == 'n')
+                        {
+                            sp = SongParameter.Name;
+                            break;
+                        }
+                        else if (param == 'a')
+                        {
+                            sp = SongParameter.Author;
+                            break;
+                        }
+                        else if (param == 't')
+                        {
+                            sp = SongParameter.Length;
+                            break;
+                        }
+                        else if (param == 'l')
+                        {
+                            sp = SongParameter.Link;
+                            break;
+                        }
+                        else
+                        {
+                            throw new ArithmeticException();
+                        }
+                    }
+                    catch (ArithmeticException e)
+                    {
+                        Console.Write("Enter a valid option!");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Write("Enter a single character!");
+                    }
+                }
+            // Goto per ripetere senza mettere un while true loop come sopra e ottenimento nuovo valore parametro
+            Message:
+                Console.Write("What do you want to change this parameter to? ");
+                string wtcit = Console.ReadLine();
+                if (wtcit == string.Empty) // Se il parametro e' vuoto ripeti la domanda
+                {
+                    goto Message;
+                }
+                //Funzione per cambiare i parametri
+                EditSong(SongsList, songList, song, sp, wtcit);
+                //Ricarica canzoni dalla lista fisica
+                ReadSongs(SongsList, ref songList);
+                //Torno al hub di inizio
+                MainMethod();
+            }
+
             //Metodo per aggiungere canzoni al file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             void AddSong(List<string> songs, string name, string author, int length, string link)
             {
@@ -490,7 +577,7 @@ namespace SongPlayer
             }
 
             //Metodo per rimuovere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
-            void RemoveSong(List<string> songs, ref Song[] songArray, int songToRemove)
+            void RemoveSong(List<string> songs, int songToRemove)
             {
                 //Rimuove la canzone dalla lista temporanea e riscrive il file con le canzoni di prima
                 songs.RemoveAt(songToRemove);
@@ -500,6 +587,33 @@ namespace SongPlayer
                 }
                 string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
+            }
+
+            //Metodo per cambiare i parametri delle canzoni in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
+            void EditSong(List<string> songs, Song[] songArray, int songToChange, SongParameter sp, string whatToChangeItTo)
+            {
+                //Se il titolo della canzone e' uguale al titolo della canzone selezionata...
+                for(int i = 0; i < songs.Count; i++)
+                {
+                    if (songs[i].Split(',')[0] == songArray[songToChange].name)
+                    {
+                        //divide la canzone nelle sue 4 parti (nome, autore, lunghezza e link)
+                        string[] parts = songs[i].Split(',');
+                        //cambia la parte da cambiare
+                        parts[(int)sp] = whatToChangeItTo;
+                        //Cambia la stringa della canzone nella lista a quella con il parametro aggiornato
+                        songs[i] = string.Join(",", parts);
+                        break;
+                    }
+                }
+                //Salva il file con il parametro della lista aggiornato
+                for (int i = 0; i < songs.Count; i++)
+                {
+                    songs[i] = songs[i] + "-ENDSONG-\n";
+                }
+                string allSongsList = string.Join("", songs);
+                File.WriteAllText(@path, allSongsList);
+
             }
         }
     }
