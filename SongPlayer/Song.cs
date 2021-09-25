@@ -41,9 +41,9 @@ namespace SongPlayer
         ///Metodo per aprire una finestra nel browser con il link dato
         /// </summary>
         /// <param name="i"></param>
-        public static void Play(Song i)
+        public static Process Play(Song i)
         {
-            Process.Start(i.link);
+            return Process.Start("Firefox.exe", " -P \"Musica\" -new-tab " + i.link + " -foreground");
         }
         //Metodo per organizzare un array di canzoni alfabeticamente
         public int CompareTo(object obj)

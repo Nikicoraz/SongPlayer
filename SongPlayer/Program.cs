@@ -288,37 +288,59 @@ namespace SongPlayer
                     //Sceglie un numero a caso e prende la canzone dall'array, poi aspetta per la durata
                     //Se una canzone e' stata scelta viene aggiunta ad una array e non viene ripetuta per 10 turni
                     //Questo viene fatto solo se si ha piu' di 10 canzoni
-                    int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-                    System.Random random = new System.Random();
-                    for (int i = 1; i > 0; i++)
-                    {
-                        int y = random.Next(0, songList.Length);
-                        bool alreadyPlayed = false;
-                        if (songList.Length > 10)
-                        {
-                            int el = 0;
-                            foreach (int elment in alradyPlayedSongs)
+                    Thread t = new Thread(new ThreadStart(() => {
+                        int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+                        System.Random random = new System.Random();
+                        System.Diagnostics.Process process;
+                        int i = 1;
+                        while (true) { 
+                            int y = random.Next(0, songList.Length);
+                            bool alreadyPlayed = false;
+                            if (songList.Length > 10)
                             {
-                                el += 1;
-                                if (elment == y)
+                                int el = 0;
+                                foreach (int elment in alradyPlayedSongs)
                                 {
-                                    Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {(i - el) % 10} songs ago!");
-                                    alreadyPlayed = true;
-                                    break;
+                                    el += 1;
+                                    if (elment == y)
+                                    {
+                                        Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {(i - el) % 10} songs ago!");
+                                        alreadyPlayed = true;
+                                        break;
+                                    }
                                 }
                             }
+                            if (alreadyPlayed)
+                            {
+                                i--;
+                                continue;
+                            }
+
+
+                            Song.Play(songList[y]);
+                            Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
+                            alradyPlayedSongs[(i - 1) % 10] = y;
+                            // Quando si interrompe il thread per saltare la canzone bisogna prendere l'eccezione
+                            try
+                            {
+                                Thread.Sleep(songList[y].time * 1000 + 5000);
+                            }
+                            catch{}
+                            i++;
                         }
-                        if (alreadyPlayed){
-							i--;
-							continue;
-						}
-						
-							
-                        Song.Play(songList[y]);
-                        Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
-                        alradyPlayedSongs[(i - 1) % 10] = y;
-                        Thread.Sleep(songList[y].time * 1000 + 5000);
+                    }));
+                    // Inizio Thread
+                    t.Start();
+                    while (true)
+                    {
+                        string cosaHaiDetto = Console.ReadLine();
+                        switch (cosaHaiDetto)
+                        {
+                            case "skip":
+                                t.Interrupt(); break;
+                        }
                     }
+                    
                 }
                 else if (_ == "f")
                 {
