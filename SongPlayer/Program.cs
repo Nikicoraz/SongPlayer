@@ -53,6 +53,7 @@ namespace SongPlayer
                 string conf = Console.ReadLine();
                 try
                 {
+                    // Uno switch no eh
                     if (conf == "p")
                     {
                         SongPlayer();
@@ -86,7 +87,8 @@ namespace SongPlayer
                         string name, autor, link;
                         int time;
                         Console.Write("Enter song name: ");
-                        name = Console.ReadLine();
+                        // Rimpiazza le virgole perche' come un mona le ho messe come separator
+                        name = Console.ReadLine().Replace(",", "");
                         Console.Write("Enter song author: ");
                         autor = Console.ReadLine();
                         Console.Write("Enter song length: ");
@@ -291,7 +293,6 @@ namespace SongPlayer
                     Thread t = new Thread(new ThreadStart(() => {
                         int[] alradyPlayedSongs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
                         System.Random random = new System.Random();
-                        System.Diagnostics.Process process;
                         int i = 1;
                         while (true) { 
                             int y = random.Next(0, songList.Length);
@@ -533,14 +534,13 @@ namespace SongPlayer
                         Console.Write("Enter a single character!");
                     }
                 }
-            // Goto per ripetere senza mettere un while true loop come sopra e ottenimento nuovo valore parametro
-            Message:
-                Console.Write("What do you want to change this parameter to? ");
-                string wtcit = Console.ReadLine();
-                if (wtcit == string.Empty) // Se il parametro e' vuoto ripeti la domanda
+                // Prima un goto ma no spaghetti code pls
+                string wtcit = string.Empty;
+                do
                 {
-                    goto Message;
-                }
+                    Console.Write("What do you want to change this parameter to? ");
+                    wtcit = Console.ReadLine();
+                } while (wtcit == string.Empty);
                 //Funzione per cambiare i parametri
                 EditSong(SongsList, songList, song, sp, wtcit);
                 //Ricarica canzoni dalla lista fisica

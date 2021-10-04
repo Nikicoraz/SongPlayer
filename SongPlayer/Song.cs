@@ -43,7 +43,7 @@ namespace SongPlayer
         /// <param name="i"></param>
         public static Process Play(Song i)
         {
-            return Process.Start("Firefox.exe", " -P \"Musica\" -new-tab " + i.link + " -foreground");
+            return Process.Start("Firefox.exe", " -P \"Musica\" -new-tab " + i.link );
         }
         //Metodo per organizzare un array di canzoni alfabeticamente
         public int CompareTo(object obj)
