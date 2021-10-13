@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace SongPlayer
 {
@@ -17,6 +18,9 @@ namespace SongPlayer
         public string link;
         public const string YOUTUBE_EMBED_HTML = @"<!DOCTYPE html>
 <html>
+<head>
+    <title>---TITLE---</title>
+</head>
   <body>
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
     <div id=""player""></div>
@@ -52,6 +56,7 @@ namespace SongPlayer
     function onPlayerReady(event)
     {
         event.target.playVideo();
+        setTimeout(() => {close();}, ---TIME--- + 8000);
     }
     </script>
   </body>
@@ -87,9 +92,27 @@ namespace SongPlayer
         public static Process Play(Song i)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\html\html_canzoni.html";
-            File.WriteAllText(path, YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]));
-            return Process.Start("Firefox.exe", " -P \"Musica\" -new-tab " + i.link );
-        }
+            File.WriteAllText(path, YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]).Replace("---TITLE---", i.name).Replace(
+                "---TIME---", (i.time * 1000).ToString()));
+            try
+            {
+                string pythonDir = AppDomain.CurrentDomain.BaseDirectory + "\\py\\python.exe";
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = $"/C start {pythonDir} -m http.server --directory C:\\Users\\nicol\\AppData\\LocalLow\\NikiIncFaGiochiDaSchifo\\Canzoni\\html 8080 & timeout -t 3 & taskkill /IM python.exe";
+                process.StartInfo = startInfo;
+                process.Start();
+                Process _ = Process.Start("Firefox.exe", " -P \"Musica\" -new-tab localhost:8080/html_canzoni.html");
+                return _;
+            }
+            catch
+            {
+                return Process.Start(i.link);
+            }
+            
+            }
         //Metodo per organizzare un array di canzoni alfabeticamente
         public int CompareTo(object obj)
         {
