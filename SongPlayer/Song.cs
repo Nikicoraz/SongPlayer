@@ -99,7 +99,7 @@ namespace SongPlayer
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = $"/C start /b {pythonDir} -m http.server --directory C:\\Users\\nicol\\AppData\\LocalLow\\NikiIncFaGiochiDaSchifo\\Canzoni\\html 8080 & timeout -t 3 & taskkill /IM python.exe";
+                startInfo.Arguments = $"/C start /b {pythonDir} -m http.server --directory {Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\html"} 8080 & timeout -t 3 & taskkill /IM python.exe";
                 process.StartInfo = startInfo;
                 process.Start();
             try
