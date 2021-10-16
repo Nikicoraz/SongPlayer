@@ -56,7 +56,7 @@ namespace SongPlayer
     function onPlayerReady(event)
     {
         event.target.playVideo();
-        setTimeout(() => {close();}, ---TIME--- + 8000);
+        setTimeout(() => {close();}, ---TIME--- + 7000);
     }
     </script>
   </body>
@@ -94,22 +94,22 @@ namespace SongPlayer
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\html\html_canzoni.html";
             File.WriteAllText(path, YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]).Replace("---TITLE---", i.name).Replace(
                 "---TIME---", (i.time * 1000).ToString()));
-            try
-            {
                 string pythonDir = AppDomain.CurrentDomain.BaseDirectory + "\\py\\python.exe";
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = $"/C start {pythonDir} -m http.server --directory C:\\Users\\nicol\\AppData\\LocalLow\\NikiIncFaGiochiDaSchifo\\Canzoni\\html 8080 & timeout -t 3 & taskkill /IM python.exe";
+                startInfo.Arguments = $"/C start /b {pythonDir} -m http.server --directory C:\\Users\\nicol\\AppData\\LocalLow\\NikiIncFaGiochiDaSchifo\\Canzoni\\html 8080 & timeout -t 3 & taskkill /IM python.exe";
                 process.StartInfo = startInfo;
                 process.Start();
+            try
+            {
                 Process _ = Process.Start("Firefox.exe", " -P \"Musica\" -new-tab localhost:8080/html_canzoni.html");
                 return _;
             }
             catch
             {
-                return Process.Start(i.link);
+                return Process.Start("localhost: 8080 / html_canzoni.html");
             }
             
             }
