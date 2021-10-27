@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,76 +49,67 @@ namespace SongPlayer
                 //conf = variabile che decide cosa fare (input, string)
                 //Per le definizioni dei metodi guarda sotto
 
-                Console.Write("Play a song or details or search or consecutive play or shuffle or add or remove or edit?: (p, d, s, c, sh, a, rm, e) ");
+                Console.Write("Play a song or details or search or consecutive play or shuffle or add or remove or edit?: ([p]lay, [d]etails, [s]earch, c, [sh]uffler, [a]dd song, rm, [e]ditor) ");
                 string conf = Console.ReadLine();
                 try
                 {
-                    // Uno switch no eh
-                    if (conf == "p")
+                    // Uno switch si eh
+                    switch (conf)
                     {
-                        SongPlayer();
-                    }
-                    else if (conf == "d")
-                    {
-                        SongDeatailer();
-                    }
-                    else if (conf == "s")
-                    {
-                        SongSearcher();
-                    }
-                    else if (conf == "c")
-                    {
-                        ConsecutiveSongPlayer();
-                    }
-                    else if (conf == "sh")
-                    {
-                        SongShuffeler();
-                    }
-                    else if (conf == "e")
-                    {
-                        SongEditor();
-                    }
-                    //Questi ultimi due i metodi erano piu' complicati e servivano delle variabili in input
-                    //quindi ho dovuto scrivere fuori dal metodo
-
-                    else if (conf == "a")
-                    {
-                        Console.WriteLine("--------------------------------------------------------------------------------------------");
-                        string name, autor, link;
-                        int time;
-                        Console.Write("Enter song name: ");
-                        // Rimpiazza le virgole perche' come un mona le ho messe come separator
-                        name = Console.ReadLine().Replace(",", "");
-                        Console.Write("Enter song author: ");
-                        autor = Console.ReadLine();
-                        Console.Write("Enter song length: ");
-                        time = int.Parse(Console.ReadLine());
-                        Console.Write("Enter song link: ");
-                        link = Console.ReadLine();
-                        AddSong(SongsList, name, autor, time, link);
-                        ReadSongs(SongsList, ref songList);
-                        Console.WriteLine("--------------------------------------------------------------------------------------------");
-                        MainMethod();
-                    }
-                    else if (conf == "rm")
-                    {
-                        for (int i = 0; i < songList.Length; i++)
-                        {
-                            Console.WriteLine("[" + i + "] " + songList[i].name);
-                        }
-                        Console.Write("Select a song to remove: ");
-                        int songToRemove = int.Parse(Console.ReadLine());
-                        RemoveSong(SongsList, songToRemove);
-                        ReadSongs(SongsList, ref songList);
-                        Console.WriteLine("Removed song [" + songToRemove + "]");
-                        Console.WriteLine("--------------------------------------------------------------------------------------------");
-                        MainMethod();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Wrong character entered!\n--------------------------------------------------------------------------------------------");
-                        MainMethod();
-
+                        case "p":
+                            SongPlayer();
+                            break;
+                        case "d":
+                            SongDeatailer();
+                            break;
+                        case "s":
+                            SongSearcher();
+                            break;
+                        case "c":
+                            ConsecutiveSongPlayer();
+                            break;
+                        case "sh":
+                            SongShuffeler();
+                            break;
+                        case "e":
+                            SongEditor();
+                            break;
+                        case "a":
+                            //Questi ultimi due i metodi erano piu' complicati e servivano delle variabili in input
+                            Console.WriteLine("--------------------------------------------------------------------------------------------");
+                            string name, autor, link;
+                            int time;
+                            Console.Write("Enter song name: ");
+                            // Rimpiazza le virgole perche' come un mona le ho messe come separator
+                            name = Console.ReadLine().Replace(",", "");
+                            Console.Write("Enter song author: ");
+                            autor = Console.ReadLine();
+                            Console.Write("Enter song length: ");
+                            time = int.Parse(Console.ReadLine());
+                            Console.Write("Enter song link: ");
+                            link = Console.ReadLine();
+                            AddSong(SongsList, name, autor, time, link);
+                            ReadSongs(SongsList, ref songList);
+                            Console.WriteLine("--------------------------------------------------------------------------------------------");
+                            MainMethod();
+                            break;
+                        case "rm":
+                            for (int i = 0; i < songList.Length; i++)
+                            {
+                                Console.WriteLine("[" + i + "] " + songList[i].name);
+                            }
+                            Console.Write("Select a song to remove: ");
+                            int songToRemove = int.Parse(Console.ReadLine());
+                            RemoveSong(SongsList, songToRemove);
+                            ReadSongs(SongsList, ref songList);
+                            Console.WriteLine("Removed song [" + songToRemove + "]");
+                            Console.WriteLine("--------------------------------------------------------------------------------------------");
+                            MainMethod();
+                            break;
+                        default:
+                            Console.WriteLine("Wrong character entered!\n--------------------------------------------------------------------------------------------");
+                            MainMethod();
+                            break;
                     }
                 }
                 //Scrittura di eventuali errori
