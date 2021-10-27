@@ -50,7 +50,7 @@ namespace SongPlayer
                 //conf = variabile che decide cosa fare (input, string)
                 //Per le definizioni dei metodi guarda sotto
 
-                Console.Write("[p] Play a song\n[d] Details\n[s] search\n[c] Consecutive play\n[sh] Shuffle\n[a] Add\n[rm] Remove\n[e] Edit\nSelect an option: ");
+                Console.Write("[p]  Play a song\n[d]  Details\n[s]  search\n[c]  Consecutive play\n[sh] Shuffle\n[a]  Add\n[rm] Remove\n[e]  Edit\nSelect an option: ");
                 string conf = Console.ReadLine();
                 try
                 {
