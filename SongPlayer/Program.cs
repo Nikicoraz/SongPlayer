@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using WMPLib;
 
@@ -49,7 +50,7 @@ namespace SongPlayer
                 //conf = variabile che decide cosa fare (input, string)
                 //Per le definizioni dei metodi guarda sotto
 
-                Console.Write("Play a song or details or search or consecutive play or shuffle or add or remove or edit?: ([p]lay, [d]etails, [s]earch, c, [sh]uffler, [a]dd song, rm, [e]ditor) ");
+                Console.Write("[p] Play a song\n[d] Details\n[s] search\n[c] Consecutive play\n[sh] Shuffle\n[a] Add\n[rm] Remove\n[e] Edit\nSelect an option: ");
                 string conf = Console.ReadLine();
                 try
                 {
@@ -87,7 +88,11 @@ namespace SongPlayer
                             Console.Write("Enter song length: ");
                             time = int.Parse(Console.ReadLine());
                             Console.Write("Enter song link: ");
-                            link = Console.ReadLine();
+                            link = Console.ReadLine().Trim(' ');
+                            if (new Regex(@"^.+\/\/www\.youtube\..{3}\/watch\?v=.{11}$").Matches(link).Count == 1)
+                            {
+                                link = "https://youtu.be/" + link.Split(new string[] { "?v=" }, StringSplitOptions.None)[1];
+                            }
                             AddSong(SongsList, name, autor, time, link);
                             ReadSongs(SongsList, ref songList);
                             Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -485,12 +490,13 @@ namespace SongPlayer
                 int song = Convert.ToInt32(Console.ReadLine());
                 //Ottenimento parametro da modificare
                 Console.Write("What parameter would you like to edit? (n, a, t, l) ");
-                SongParameter sp;
-                while (true)
+                SongParameter sp = SongParameter.Name;
+                char param = ' ';
+                do
                 {
                     try
                     {   // Avrei dovuto mettere uno switch -_- vabbe' : Ora che :D
-                        char param = Convert.ToChar(Console.ReadLine());
+                        param = Convert.ToChar(Console.ReadLine());
                         switch (param)
                         {
                             case 'n':
@@ -507,18 +513,17 @@ namespace SongPlayer
                                 break;
                             default:
                                 throw new ArithmeticException();
-                                break;
                         }
                     }
-                    catch (ArithmeticException e)
+                    catch (ArithmeticException)
                     {
                         Console.Write("Enter a valid option!");
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         Console.Write("Enter a single character!");
                     }
-                }
+                } while (param.ToString().IndexOfAny(new char[] {'n', 'a', 't', 'l' }) == -1);
                 // Prima un goto ma no spaghetti code pls
                 string wtcit = string.Empty;
                 do
