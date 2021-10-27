@@ -21,4 +21,3 @@ Non è per niente male e di solito lo uso durante i compiti. Unica pecca è che 
 #### Installazione
 
 Fallo partire usando visual studio e troverai un *.exe* nella cartella `debug`
-Test per le robe
