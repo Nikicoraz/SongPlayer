@@ -489,31 +489,25 @@ namespace SongPlayer
                 while (true)
                 {
                     try
-                    {   // Avrei dovuto mettere uno switch -_- vabbe'
+                    {   // Avrei dovuto mettere uno switch -_- vabbe' : Ora che :D
                         char param = Convert.ToChar(Console.ReadLine());
-                        if (param == 'n')
+                        switch (param)
                         {
-                            sp = SongParameter.Name;
-                            break;
-                        }
-                        else if (param == 'a')
-                        {
-                            sp = SongParameter.Author;
-                            break;
-                        }
-                        else if (param == 't')
-                        {
-                            sp = SongParameter.Length;
-                            break;
-                        }
-                        else if (param == 'l')
-                        {
-                            sp = SongParameter.Link;
-                            break;
-                        }
-                        else
-                        {
-                            throw new ArithmeticException();
+                            case 'n':
+                                sp = SongParameter.Name;
+                                break;
+                            case 'a':
+                                sp = SongParameter.Author;
+                                break;
+                            case 't':
+                                sp = SongParameter.Length;
+                                break;
+                            case 'l':
+                                sp = SongParameter.Link;
+                                break;
+                            default:
+                                throw new ArithmeticException();
+                                break;
                         }
                     }
                     catch (ArithmeticException e)
