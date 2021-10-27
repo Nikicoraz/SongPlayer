@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -109,7 +109,7 @@ namespace SongPlayer
             }
             catch
             {
-                return Process.Start("localhost: 8080 / html_canzoni.html");
+                return Process.Start("localhost:8080/html_canzoni.html");
             }
             
             }
