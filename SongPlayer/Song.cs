@@ -110,7 +110,7 @@ namespace SongPlayer
             }
             catch
             {
-                return Process.Start("localhost:8080/html_canzoni.html");
+                return Process.Start("http://localhost:8080/html_canzoni.html");
             }
             
             }
@@ -120,6 +120,9 @@ namespace SongPlayer
             Song otherSong = (Song)obj;
             return this.name.CompareTo(otherSong.name);
         }
-
+        public override string ToString()
+        {
+            return $"{this.name},{this.author},{this.time},{this.link}-ENDSONG-";
+        }
     }
 }

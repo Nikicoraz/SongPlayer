@@ -33,13 +33,11 @@ namespace SongPlayer
             //songList = Array canzoni che vengono poi visualizzate, impostato ad una lunghezza iniziale di 1 che 
             //dopo viene cambiata nella funzione ReadSongs() (output, Song)
 
-            Song[] songList = new Song[1];
-
             //Codice
             //SongsList = Lista temporanea da cancellare e riscrivere ogni volta che si legge o scrive il file (output, List<string>)
 
-            List<string> SongsList = new List<string>();
-            ReadSongs(SongsList, ref songList);
+            List<Song> songsList = new List<Song>();
+            ReadSongs(songsList);
             MainMethod();
 
             //Metodi magici per far funzionare il programma
@@ -89,24 +87,25 @@ namespace SongPlayer
                             time = int.Parse(Console.ReadLine());
                             Console.Write("Enter song link: ");
                             link = Console.ReadLine().Trim(' ');
+                            // Formattazione del link del video a un mio standard
                             if (new Regex(@"^.+\/\/www\.youtube\..{3}\/watch\?v=.{11}$").Matches(link).Count == 1)
                             {
                                 link = "https://youtu.be/" + link.Split(new string[] { "?v=" }, StringSplitOptions.None)[1];
                             }
-                            AddSong(SongsList, name, autor, time, link);
-                            ReadSongs(SongsList, ref songList);
+                            AddSong(songsList, name, autor, time, link);
+                            ReadSongs(songsList);
                             Console.WriteLine("--------------------------------------------------------------------------------------------");
                             MainMethod();
                             break;
                         case "rm":
-                            for (int i = 0; i < songList.Length; i++)
+                            for (int i = 0; i < songsList.Count; i++)
                             {
-                                Console.WriteLine("[" + i + "] " + songList[i].name);
+                                Console.WriteLine("[" + i + "] " + songsList[i].name);
                             }
                             Console.Write("Select a song to remove: ");
                             int songToRemove = int.Parse(Console.ReadLine());
-                            RemoveSong(SongsList, songToRemove);
-                            ReadSongs(SongsList, ref songList);
+                            RemoveSong(songsList, songToRemove);
+                            ReadSongs(songsList);
                             Console.WriteLine("Removed song [" + songToRemove + "]");
                             Console.WriteLine("--------------------------------------------------------------------------------------------");
                             MainMethod();
@@ -134,28 +133,28 @@ namespace SongPlayer
             //Metodo per far partire le canzoni
             void SongPlayer()
             {
-                for (int i = 0; i < songList.Length; i++)
+                for (int i = 0; i < songsList.Count; i++)
                 {
-                    Console.WriteLine("|" + i + "| " + songList[i].name);
+                    Console.WriteLine("|" + i + "| " + songsList[i].name);
                 }
 
                 Console.Write("Select a song: ");
                 int num = int.Parse(Console.ReadLine());
-                Song.Play(songList[num]);
+                Song.Play(songsList[num]);
             }
 
             //Metodo per vedere le variabili della canzoni es. nome
             void SongDeatailer()
             {
-                for (int i = 0; i < songList.Length; i++)
+                for (int i = 0; i < songsList.Count; i++)
                 {
-                    Console.WriteLine(i + ": " + songList[i].name);
+                    Console.WriteLine(i + ": " + songsList[i].name);
                 }
 
                 Console.Write("Select a song: ");
                 int num = int.Parse(Console.ReadLine());
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
-                Song.Listen(songList[num]);
+                Song.Listen(songsList[num]);
                 Console.WriteLine("--------------------------------------------------------------------------------------------");
                 MainMethod();
             }
@@ -172,33 +171,33 @@ namespace SongPlayer
                     Console.Write("Enter a letter: ");
                     string letter = Console.ReadLine();
                     letter = letter.ToUpperInvariant();
-                    for (int i = 0; i < songList.Length; i++)
+                    for (int i = 0; i < songsList.Count; i++)
                     {
-                        if (songList[i].name.ToUpperInvariant().StartsWith(letter))
+                        if (songsList[i].name.ToUpperInvariant().StartsWith(letter))
                         {
-                            Console.WriteLine(i + ": " + songList[i].name);
+                            Console.WriteLine(i + ": " + songsList[i].name);
                         }
                     }
                     Console.Write("Select a song: ");
                     int num = int.Parse(Console.ReadLine());
-                    Song.Play(songList[num]);
+                    Song.Play(songsList[num]);
                 }
                 else if (answ == "a")
                 {
                     Console.Write("Enter an Author: ");
                     string author = Console.ReadLine();
                     author = author.ToUpperInvariant();
-                    for (int i = 0; i < songList.Length; i++)
+                    for (int i = 0; i < songsList.Count; i++)
                     {
 
-                        if (songList[i].author.ToUpperInvariant() == author)
+                        if (songsList[i].author.ToUpperInvariant() == author)
                         {
-                            Console.WriteLine(i + ": " + songList[i].name);
+                            Console.WriteLine(i + ": " + songsList[i].name);
                         }
                     }
                     Console.Write("Select a song: ");
                     int num = int.Parse(Console.ReadLine());
-                    Song.Play(songList[num]);
+                    Song.Play(songsList[num]);
                 }
                 else if (answ == "le")
                 {
@@ -210,67 +209,67 @@ namespace SongPlayer
                         case '>':
                             Console.Write("Input a Number (s): ");
                             sec = Convert.ToInt32(Console.ReadLine());
-                            for (int i = 0; i < songList.Length; i++)
+                            for (int i = 0; i < songsList.Count; i++)
                             {
-                                if (songList[i].time > sec)
+                                if (songsList[i].time > sec)
                                 {
-                                    Console.WriteLine(i + ": " + songList[i].name);
+                                    Console.WriteLine(i + ": " + songsList[i].name);
                                 }
                             }
                             Console.Write("Select a song: ");
                             int num = int.Parse(Console.ReadLine());
-                            Song.Play(songList[num]);
+                            Song.Play(songsList[num]);
                             break;
                         case '<':
                             Console.Write("Input a Number (s): ");
                             sec = Convert.ToInt32(Console.ReadLine());
-                            for (int i = 0; i < songList.Length; i++)
+                            for (int i = 0; i < songsList.Count; i++)
                             {
-                                if (songList[i].time < sec)
+                                if (songsList[i].time < sec)
                                 {
-                                    Console.WriteLine(i + ": " + songList[i].name);
+                                    Console.WriteLine(i + ": " + songsList[i].name);
                                 }
                             }
                             Console.Write("Select a song: ");
                             num = Convert.ToInt32(Console.ReadLine());
-                            Song.Play(songList[num]);
+                            Song.Play(songsList[num]);
                             break;
 
                     }
                 }
                 else if (answ == "al")
                 {
-                    Array.Sort(songList);
+                    songsList.Sort();
                     Console.WriteLine("--------------------------------------------------------------------------------------------");
                     MainMethod();
                 }
             }
 
-            //Metodo per far suonare le canzoni in ordini
+            //Metodo per far suonare le canzoni in ordine
             void ConsecutiveSongPlayer()
             {
-                for (int i = 0; i < songList.Length; i++)
+                for (int i = 0; i < songsList.Count; i++)
                 {
-                    Console.WriteLine(i + ": " + songList[i].name);
+                    Console.WriteLine(i + ": " + songsList[i].name);
                 }
                 Console.Write("From which song would you like to start: (-if to go up) ");
                 int answ = Convert.ToInt32(Console.ReadLine());
                 if (answ >= 0)
                 {
-                    for (int i = answ; i < songList.Length; i++)
+                    for (int i = answ; i < songsList.Count; i++)
                     {
-                        Song.Play(songList[i]);
-                        Console.WriteLine("Now playing " + songList[i].name);
-                        Thread.Sleep(songList[i].time * 1000 + 5000);
+                        Song.Play(songsList[i]);
+                        Console.WriteLine("Now playing " + songsList[i].name);
+                        Thread.Sleep(songsList[i].time * 1000 + 5000);
                     }
                 }
                 else if (answ < 0)
                 {
                     for (int i = answ; i <= 0; i++)
                     {
-                        Song.Play(songList[Math.Abs(i)]);
-                        Console.WriteLine("Now playing " + songList[Math.Abs(i)].name);
-                        Thread.Sleep(songList[Math.Abs(i)].time * 1000 + 5000);
+                        Song.Play(songsList[Math.Abs(i)]);
+                        Console.WriteLine("Now playing " + songsList[Math.Abs(i)].name);
+                        Thread.Sleep(songsList[Math.Abs(i)].time * 1000 + 5000);
                     }
                 }
             }
@@ -291,9 +290,9 @@ namespace SongPlayer
                         System.Random random = new System.Random();
                         int i = 1;
                         while (true) { 
-                            int y = random.Next(0, songList.Length);
+                            int y = random.Next(0, songsList.Count);
                             bool alreadyPlayed = false;
-                            if (songList.Length > 10)
+                            if (songsList.Count > 10)
                             {
                                 int el = 0;
                                 foreach (int elment in alradyPlayedSongs)
@@ -301,7 +300,7 @@ namespace SongPlayer
                                     el += 1;
                                     if (elment == y)
                                     {
-                                        Console.WriteLine($"Skipping song {songList[y].name} because it has already been played {(i - el) % 10} songs ago!");
+                                        Console.WriteLine($"Skipping song {songsList[y].name} because it has already been played {(i - el) % 10} songs ago!");
                                         alreadyPlayed = true;
                                         break;
                                     }
@@ -314,13 +313,13 @@ namespace SongPlayer
                             }
 
 
-                            Song.Play(songList[y]);
-                            Console.WriteLine("[" + i + "] " + "Now Playing: " + songList[y].name);
+                            Song.Play(songsList[y]);
+                            Console.WriteLine("[" + i + "] " + "Now Playing: " + songsList[y].name);
                             alradyPlayedSongs[(i - 1) % 10] = y;
                             // Quando si interrompe il thread per saltare la canzone bisogna prendere l'eccezione
                             try
                             {
-                                Thread.Sleep(songList[y].time * 1000 + 5000);
+                                Thread.Sleep(songsList[y].time * 1000 + 5000);
                             }
                             catch{}
                             i++;
@@ -373,7 +372,7 @@ namespace SongPlayer
                             {
                                 skip = false;
                                 System.Random random = new System.Random();
-                                int y = random.Next(0, songs.Count - 1);
+                                int y = random.Next(0, songs.Count);
                                 bool alreadyPlayed = false;
                                 if (songs.Count > 10)
                                 {
@@ -481,9 +480,9 @@ namespace SongPlayer
             void SongEditor()
             {
                 //Elenco di tutte le canzoni disponibili
-                for (int i = 0; i < songList.Length; i++)
+                for (int i = 0; i < songsList.Count; i++)
                 {
-                    Console.WriteLine("|" + i + "| " + songList[i].name);
+                    Console.WriteLine("|" + i + "| " + songsList[i].name);
                 }
                 //Ottenimento canzone da modificare
                 Console.Write("What song would you like to edit? ");
@@ -532,52 +531,44 @@ namespace SongPlayer
                     wtcit = Console.ReadLine();
                 } while (wtcit == string.Empty);
                 //Funzione per cambiare i parametri
-                EditSong(SongsList, songList, song, sp, wtcit);
+                EditSong(songsList, song, sp, wtcit);
                 //Ricarica canzoni dalla lista fisica
-                ReadSongs(SongsList, ref songList);
+                ReadSongs(songsList);
                 //Torno al hub di inizio
                 MainMethod();
             }
 
             //Metodo per aggiungere canzoni al file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
-            void AddSong(List<string> songs, string name, string author, int length, string link)
+            void AddSong(List<Song> songs, string name, string author, int length, string link)
             {
                 //Conversione delle canzoni in una stringa da inserire nel file
+                string allSongsList = "";
+                songs.Add(new Song(name, author, length, link));
                 for (int i = 0; i < songs.Count; i++)
                 {
-                    songs[i] = songs[i] + "-ENDSONG-\n";
+                    allSongsList += songs[i].ToString() + "\n";
                 }
-                string songDetails = "" + name + "," + author + "," + length + "," + link + "-ENDSONG-\n";
-                songs.Add(songDetails);
-                string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
             }
 
             //Metodo per leggere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
             //e quindi aggiornarle
-            void ReadSongs(List<string> songsList, ref Song[] songArray)
+            void ReadSongs(List<Song> songs)
             {
                 //Controllo se esiste il file altrimenti lo crea
                 if (File.Exists(@path))
                 {
                     //Riscrive la lista e usa come divisore -ENDSONG-\n; \n usato per rendere di piu' facile lettura il file
-                    songsList.Clear();
+                    songs.Clear();
                     string[] readSongs = File.ReadAllText(@path).Split(new[] { "-ENDSONG-\n" }, StringSplitOptions.None);
-                    //Nell'array c'e' sempre uno spazio vuoto da rimuovere, centra col metodo di separazione
-                    Array.Resize(ref readSongs, readSongs.Length - 1);
-                    foreach (string s in readSongs) //Aggiunge le canzoni dell'array alla lista
+                    //Nell'array c'e' sempre uno spazio vuoto che non conto, centra col metodo di separazione
+                    for (int i = 0; i < readSongs.Length - 1; i++)
                     {
-                        songsList.Add(s);
+                        string[] data = new string[4];
+                        data = readSongs[i].Split(',');
+                        Song tempSong = new Song(data[0], data[1], int.Parse(data[2]), data[3]);
+                        songs.Add(tempSong);
                     }
-                    Song[] readSongsArray = new Song[readSongs.Length]; //Creazione di array da usare per impostare l'array principale
-                    for (int i = 0; i < readSongs.Length; i++)
-                    {
-                        string[] tempArray = new string[4];
-                        tempArray = readSongs[i].Split(',');
-                        Song tempSong = new Song(tempArray[0], tempArray[1], int.Parse(tempArray[2]), tempArray[3]);
-                        readSongsArray[i] = tempSong;
-                    }
-                    songArray = readSongsArray;
                 }
                 else //Creazione del file e della directory
                 {
@@ -585,47 +576,38 @@ namespace SongPlayer
                     System.IO.Directory.CreateDirectory(folderPath);
                     File.WriteAllText(@path, string.Empty);
                 }
-
             }
 
             //Metodo per rimuovere le canzoni dal file in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
-            void RemoveSong(List<string> songs, int songToRemove)
+            void RemoveSong(List<Song> songs, int songToRemove)
             {
                 //Rimuove la canzone dalla lista temporanea e riscrive il file con le canzoni di prima
                 songs.RemoveAt(songToRemove);
+                string allSongsList = "";
                 for (int i = 0; i < songs.Count; i++)
                 {
-                    songs[i] = songs[i] + "-ENDSONG-\n";
+                    allSongsList += songs[i].ToString() + "\n";
                 }
-                string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
             }
 
             //Metodo per cambiare i parametri delle canzoni in .../Appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/Canzoni.txt
-            void EditSong(List<string> songs, Song[] songArray, int songToChange, SongParameter sp, string whatToChangeItTo)
+            void EditSong(List<Song> songs, int songToChange, SongParameter sp, string whatToChangeItTo)
             {
-                //Se il titolo della canzone e' uguale al titolo della canzone selezionata...
-                for(int i = 0; i < songs.Count; i++)
-                {
-                    if (songs[i].Split(',')[0] == songArray[songToChange].name)
-                    {
-                        //divide la canzone nelle sue 4 parti (nome, autore, lunghezza e link)
-                        string[] parts = songs[i].Split(',');
-                        //cambia la parte da cambiare
-                        parts[(int)sp] = whatToChangeItTo;
-                        //Cambia la stringa della canzone nella lista a quella con il parametro aggiornato
-                        songs[i] = string.Join(",", parts);
-                        break;
-                    }
-                }
+                //divide la canzone nelle sue 4 parti (nome, autore, lunghezza e link)
+                string[] parts = songs[songToChange].ToString().Split(',');
+                //cambia la parte da cambiare
+                parts[(int)sp] = whatToChangeItTo;
+                //Cambia la stringa della canzone nella lista a quella con il parametro aggiornato
+                songs[songToChange] = new Song(parts[0], parts[1], Convert.ToInt32(parts[2]), parts[3]);
+
                 //Salva il file con il parametro della lista aggiornato
+                string allSongsList = "";
                 for (int i = 0; i < songs.Count; i++)
                 {
-                    songs[i] = songs[i] + "-ENDSONG-\n";
+                    allSongsList += songs.ToString() + "\n";
                 }
-                string allSongsList = string.Join("", songs);
                 File.WriteAllText(@path, allSongsList);
-
             }
         }
     }
