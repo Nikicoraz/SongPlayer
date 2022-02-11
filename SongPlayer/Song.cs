@@ -113,7 +113,7 @@ namespace SongPlayer
             {
                 ProcessStartInfo psi = new ProcessStartInfo
                 {
-                    FileName = "localhost:8080",
+                    FileName = "http://localhost:8080/",
                     UseShellExecute = true
                 };
                 return Process.Start(psi);
