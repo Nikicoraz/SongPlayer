@@ -596,6 +596,15 @@ namespace SongPlayer
             {
                 //divide la canzone nelle sue 4 parti (nome, autore, lunghezza e link)
                 string[] parts = songs[songToChange].ToString().Split(',');
+                whatToChangeItTo.Replace(',', ' ');
+                // Controlli speciali per link
+                if (sp == SongParameter.Link)
+                {
+                    if (new Regex(@"^.+\/\/www\.youtube\..{3}\/watch\?v=.{11}$").Matches(whatToChangeItTo).Count == 1)
+                    {
+                        whatToChangeItTo = "https://youtu.be/" + whatToChangeItTo.Split(new string[] { "?v=" }, StringSplitOptions.None)[1];
+                    }
+                }
                 //cambia la parte da cambiare
                 parts[(int)sp] = whatToChangeItTo;
                 //Cambia la stringa della canzone nella lista a quella con il parametro aggiornato
@@ -605,7 +614,7 @@ namespace SongPlayer
                 string allSongsList = "";
                 for (int i = 0; i < songs.Count; i++)
                 {
-                    allSongsList += songs.ToString() + "\n";
+                    allSongsList += songs[i].ToString() + "\n";
                 }
                 File.WriteAllText(@path, allSongsList);
             }

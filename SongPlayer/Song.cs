@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 
 namespace SongPlayer
@@ -91,29 +90,36 @@ namespace SongPlayer
         /// <param name="i"></param>
         public static Process Play(Song i)
         {
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\html\");
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\html\html_canzoni.html";
-            File.WriteAllText(path, YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]).Replace("---TITLE---", i.name).Replace(
+            // Creazione di un server http per far andare la canzone in embed
+            HttpServer server = new HttpServer(YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]).Replace("---TITLE---", i.name).Replace(
                 "---TIME---", (i.time * 1000).ToString()));
-                string pythonDir = AppDomain.CurrentDomain.BaseDirectory + "\\py\\python.exe";
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = $"/C start /b {pythonDir} -m http.server --directory {Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace(@"\Roaming", @"\LocalLow") + @"\NikiIncFaGiochiDaSchifo\Canzoni\html"} 8080 & timeout -t 3 & taskkill /IM python.exe";
-                process.StartInfo = startInfo;
-                process.Start();
+            new Thread(() =>
+            {
+                server.StartServer("http://localhost:8080", 1);
+            }).Start();
+
+            //Firefox è meglio :p
             try
             {
-                Process _ = Process.Start("Firefox.exe", " -P \"Musica\" -new-tab localhost:8080/html_canzoni.html");
-                return _;
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "Firefox.exe",
+                    Arguments = " -P \"Musica\" -new-tab localhost:8080/",
+                    UseShellExecute = true
+                };
+                return Process.Start(psi);
             }
             catch
             {
-                return Process.Start("http://localhost:8080/html_canzoni.html");
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "localhost:8080",
+                    UseShellExecute = true
+                };
+                return Process.Start(psi);
             }
             
-            }
+        }
         //Metodo per organizzare un array di canzoni alfabeticamente
         public int CompareTo(object obj)
         {
