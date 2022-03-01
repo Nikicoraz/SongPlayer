@@ -496,23 +496,14 @@ namespace SongPlayer
                     try
                     {   // Avrei dovuto mettere uno switch -_- vabbe' : Ora che :D
                         param = Convert.ToChar(Console.ReadLine());
-                        switch (param)
+                        sp = param switch
                         {
-                            case 'n':
-                                sp = SongParameter.Name;
-                                break;
-                            case 'a':
-                                sp = SongParameter.Author;
-                                break;
-                            case 't':
-                                sp = SongParameter.Length;
-                                break;
-                            case 'l':
-                                sp = SongParameter.Link;
-                                break;
-                            default:
-                                throw new ArithmeticException();
-                        }
+                            'n' => SongParameter.Name,
+                            'a' => SongParameter.Author,
+                            't' => SongParameter.Length,
+                            'l' => SongParameter.Link,
+                            _ => throw new ArithmeticException(),
+                        };
                     }
                     catch (ArithmeticException)
                     {
