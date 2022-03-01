@@ -14,7 +14,8 @@ Poi carica il file, suddivide le canzoni in base alla riga in cui sono e poi le 
 Per le canzoni in locale usa una reference a Windows Media Player per farle partire in un thread diverso così da poterle fermare o fare ripartire a piacimento.
 Esse vengono lette dalla cartella `appdata/LocalLow/NikiIncFaGiochiDaSchifo/Canzoni/.`  
 
-Non è per niente male e di solito lo uso durante i compiti. Unica pecca è che ti apre 1000 finestre nel brower se usi la modalità online
+Non è per niente male e di solito lo uso durante i compiti. Unica pecca è che ti apre 1000 finestre nel brower se usi la modalità online  
+EDIT: ora non più :)
 
 ---
 
