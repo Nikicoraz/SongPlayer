@@ -10,13 +10,16 @@ namespace SongPlayer
     {
         public static HttpListener listener;
         public string pageData;
-        private bool serverRunning = false;
+        public bool serverRunning = false;
 
         public HttpServer(string pageData){
             this.pageData = pageData;
         }
         public HttpServer() { }
-
+        public void ChangeHtml(string html)
+        {
+            this.pageData = html;
+        }
         public async Task HandleIncomingConnections(int limit)
         {
             int currentViews = 0;

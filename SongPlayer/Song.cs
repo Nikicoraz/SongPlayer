@@ -62,6 +62,8 @@ namespace SongPlayer
 </html>
 ";
 
+        private static HttpServer server = new HttpServer();
+
         public Song(string n, string a, int t, string l)
         {
             name = n;
@@ -91,13 +93,15 @@ namespace SongPlayer
         public static Process Play(Song i)
         {
             // Creazione di un server http per far andare la canzone in embed
-            HttpServer server = new HttpServer(YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]).Replace("---TITLE---", i.name).Replace(
+            server.ChangeHtml(YOUTUBE_EMBED_HTML.Replace("---VIDEO_ID---", i.link.Split(new string[] { "/", "?" }, StringSplitOptions.None)[3]).Replace("---TITLE---", i.name).Replace(
                 "---TIME---", (i.time * 1000).ToString()));
-            new Thread(() =>
+            if (!server.serverRunning)
             {
-                server.StartServer("http://localhost:8080", 1);
-            }).Start();
-
+                new Thread(() =>
+                {
+                    server.StartServer("http://localhost:8080", 1);
+                }).Start();
+            }
             //Firefox è meglio :p
             try
             {
