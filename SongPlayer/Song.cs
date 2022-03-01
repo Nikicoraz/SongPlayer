@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 
 namespace SongPlayer
 {
@@ -62,7 +63,7 @@ namespace SongPlayer
 </html>
 ";
 
-        private static HttpServer server = new HttpServer();
+        private static readonly HttpServer server = new HttpServer();
 
         public Song(string n, string a, int t, string l)
         {
@@ -105,15 +106,57 @@ namespace SongPlayer
             //Firefox è meglio :p
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo
+                // Controllo se esiste la cartella di firefox
+                if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData ) + "\\Mozilla\\Firefox")){
+                    // Controllo se esiste il profilo
+                    ProcessStartInfo psi;
+                    string profilesFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Mozilla\\Firefox\\Profiles";
+                    const string nomeProfilo = "NikiIncMusica";
+                    string[] profiles = Directory.GetDirectories(profilesFolderPath);
+                    if (!string.Join("", profiles).Contains(nomeProfilo))
+                    {
+                        Console.WriteLine("Creazione profilo di firefox \"NikiIncMusica\"...");
+                        psi = new ProcessStartInfo
+                        {
+                            FileName = "Firefox.exe",
+                            Arguments = $"-CreateProfile \"{nomeProfilo}\"",
+                            UseShellExecute = true,
+                            WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
+                        };
+                        Process.Start(psi).WaitForExit();
+                        // Si dovrebbe essere creata una cartella con il nome del profilo e quindi devo refreshare 
+                        profiles = Directory.GetDirectories(profilesFolderPath);
+
+                        string musicProfileFolder = "";
+                        foreach (string path in profiles)
+                        {
+                            if (path.Contains(nomeProfilo))
+                            {
+                                musicProfileFolder = path;
+                            }
+                        }
+                        StreamWriter prefs = File.CreateText(musicProfileFolder + "\\prefs.js");
+                        
+                        // Opzioni per autoplay e auto close delle schede
+                        prefs.Write("user_pref(\"media.block-autoplay-until-in-foreground\", false);\nuser_pref(\"dom.allow_scripts_to_close_windows\", true);\n" +
+                            "user_pref(\"media.autoplay.default\", 0);");
+                        prefs.Close();
+                    }
+
+                    psi = new ProcessStartInfo
+                    {
+                        FileName = "Firefox.exe",
+                        Arguments = $" -P \"{nomeProfilo}\" -new-tab localhost:8080/",
+                        UseShellExecute = true
+                    };
+                    return Process.Start(psi);
+                }
+                else
                 {
-                    FileName = "Firefox.exe",
-                    Arguments = " -P \"Musica\" -new-tab localhost:8080/",
-                    UseShellExecute = true
-                };
-                return Process.Start(psi);
+                    throw new Exception("Firefox non trovato :(");
+                }
             }
-            catch
+            catch(ArgumentException)
             {
                 ProcessStartInfo psi = new ProcessStartInfo
                 {

@@ -13,11 +13,11 @@ namespace UsefulTools
     class UsefulTools
     {
         //Variabili
-        private static char[] alphabetArray = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z' };
+        private static readonly char[] alphabetArray = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z' };
         /// <summary>
         /// Array di char dell'alfabeto
         /// </summary>
-        public static char[] alphabet { get { return alphabetArray; } }
+        public static char[] Alphabet { get { return alphabetArray; } }
 
         //Metodi
         public static void SayHi(string name)
@@ -49,7 +49,7 @@ namespace UsefulTools
             double s;
             s = m;
             m = Math.Floor(m);
-            s = s - m;
+            s -= m;
             s *= 100;
             m *= 60;
             int t = Convert.ToInt32(s) + Convert.ToInt32(m);
@@ -166,7 +166,7 @@ namespace UsefulTools
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public static double digitalRoot(double num)
+        public static double DigitalRoot(double num)
         {
             return (num - 1) % 9 + 1;
         }
@@ -310,7 +310,7 @@ namespace UsefulTools
         /// Console write per pigri
         /// </summary>
         /// <param name="i"></param>
-        public static void print(object i)
+        public static void Print(object i)
         {
             Console.Write(i);
         }
@@ -321,9 +321,9 @@ namespace UsefulTools
         /// <returns></returns>
         public static int FindLetterInTheAlphabet(char letter)
         {
-            for (int i = 0; i < alphabet.Length; i++)
+            for (int i = 0; i < Alphabet.Length; i++)
             {
-                if (alphabet[i] == letter)
+                if (Alphabet[i] == letter)
                 {
                     return i;
                 }
