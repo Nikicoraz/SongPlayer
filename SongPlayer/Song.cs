@@ -156,7 +156,7 @@ namespace SongPlayer
                     throw new ArgumentException("Firefox non trovato :(");
                 }
             }
-            catch(ArgumentException)
+            catch(Exception)
             {
                 ProcessStartInfo psi = new ProcessStartInfo
                 {
