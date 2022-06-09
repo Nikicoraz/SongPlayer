@@ -153,7 +153,7 @@ namespace SongPlayer
                 }
                 else
                 {
-                    throw new Exception("Firefox non trovato :(");
+                    throw new ArgumentException("Firefox non trovato :(");
                 }
             }
             catch(ArgumentException)

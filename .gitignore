@@ -2,3 +2,9 @@
 *.pbd
 SongPlayer/obj/
 SongPlayer/bin/
+.vs/SongPlayer/DesignTimeBuild/.dtbcache.v2
+.vs/SongPlayer/v16/.suo
+.vs/SongPlayer/v17/.futdcache.v1
+.vs/SongPlayer/v17/.suo
+SongPlayer/Properties/PublishProfiles/FolderProfile.pubxml.user
+SongPlayer/SongPlayer.csproj.user
